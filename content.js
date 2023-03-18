@@ -14,7 +14,10 @@ function replaceWordsInTextNode(textNode, words) {
   for (const word in words) {
     const translation = words[word];
     const regex = new RegExp(`\\b${word}\\b`, 'gi');
-    newText = newText.replace(regex, `<span class="translated-word" data-original="${word}" data-translation="${translation}">${translation}</span>`);
+    // newText = newText.replace(regex, `<span class="translated-word" data-original="${word}" data-translation="${translation}">${translation}</span>`);
+    newText = newText.replace(regex, () => {
+      return `<span class="translated-word" data-original="${word}" data-translation="${translation}">${translation}</span>`;
+    });
   }
 
   if (newText !== text) {
@@ -48,7 +51,21 @@ function toggleTranslation(event) {
 
 chrome.storage.local.get(['words'], ({ words }) => {
   if (words) {
-    traverseDOM(document.body, words);
+    const observer = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === 'childList') {
+          for (const node of mutation.addedNodes) {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              traverseDOM(node, words);
+            }
+          }
+        }
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    setTimeout(traverseDOM(document.body, words),1000);
     document.body.addEventListener('click', toggleTranslation);
   } else {
     fetchAndUpdateWords();
@@ -59,5 +76,16 @@ chrome.storage.local.get(['words'], ({ words }) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'replaceWords') {
     fetchAndUpdateWords();
+  }
+});
+
+// content.js
+document.addEventListener('DOMContentLoaded', () => {
+  const updateWordsButton = document.querySelector('#update-words-button');
+
+  if (updateWordsButton) {
+    updateWordsButton.addEventListener('click', () => {
+      fetchAndUpdateWords();
+    });
   }
 });
