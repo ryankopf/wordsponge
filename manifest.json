@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Word Sponge",
+  "version": "1.0",
+  "description": "Word Sponge helps you learn a new language by integrating that language into your daily life.",
+  "permissions": [
+    "storage",
+    "scripting",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://thewordsponge.com/"
+  ],
+  "action": {
+    "default_title": "Word Sponge",
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "exclude_matches": ["*://*.google.com/*"],
+      "js": ["content.js"],
+      "css": ["style.css"]
+    }
+  ]
+}
