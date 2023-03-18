@@ -7,19 +7,6 @@ async function fetchAndUpdateWords() {
     }
   });
 }
-function replaceWords(words) {
-  const bodyText = document.body.innerHTML;
-  let newText = bodyText;
-
-  for (const word in words) {
-    const translation = words[word];
-    const regex = new RegExp(`\\b${word}\\b`, 'gi');
-    newText = newText.replace(regex, `<span class="translated-word" data-original="${word}" data-translation="${translation}">${translation}</span>`);
-  }
-
-  document.body.innerHTML = newText;
-}
-
 function replaceWordsInTextNode(textNode, words) {
   const text = textNode.nodeValue;
   let newText = text;
