@@ -1,5 +1,7 @@
 .translated-word {
-  color: blue;
+  /*color: blue;*/
   cursor: pointer;
-  text-decoration: underline;
+  /*text-decoration: underline;*/
+  background: rgba(0,0,255,0.1);
+  border-radius:4px;
 }
