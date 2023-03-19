@@ -42,3 +42,9 @@ That's it! You're now ready to start browsing the web and learning a new languag
 ## Contributing
 
 If you'd like to contribute to Word Sponge, please fork the repository and submit a pull request. All contributions are welcome, including bug fixes, feature requests, and translations for additional languages. Please note that by submitting a contribution, you agree to license your contribution for free to the creators and under any additional licenses we add to this project in the future.
+
+## Forking Your Own
+
+If you'd like to fork your own, you can do so easily by forking this repository. You could, for example, add word lists directly into the extension.
+My version of the extension checks for updates to the word list every 24 hours from [thewordsponge.com](thewordsponge.com), but you could host your
+own site or use a different method to update the word list.
