@@ -6,8 +6,18 @@ async function fetchAndUpdateWords() {
       console.error(chrome.runtime.lastError);
     }
   });
+  setTimeout(function(){undo_translation();do_traversal();},1000);
 }
-function replaceWordsInTextNode(textNode, words) {
+function undo_translation() {
+  const translatedWords = document.querySelectorAll('.translated-word');
+  translatedWords.forEach(word => {
+    const originalText = word.dataset.original;
+    const parent = word.parentNode;
+    parent.replaceChild(document.createTextNode(originalText), word);
+  });
+}
+
+function replaceWordsInTextNode(textNode, words, count) {
   const text = textNode.nodeValue;
   let newText = text;
 
@@ -21,6 +31,7 @@ function replaceWordsInTextNode(textNode, words) {
   }
 
   if (newText !== text) {
+    count += 1;
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = newText;
     const parentNode = textNode.parentNode;
@@ -30,13 +41,20 @@ function replaceWordsInTextNode(textNode, words) {
     parentNode.removeChild(textNode);
   }
 }
-function traverseDOM(node, words, insideSomethingToSkip = false) {
+function traverseDOM(node, words, insideSomethingToSkip = false, count = 1) {
+  if (count > 10) {
+    return;
+  }
   if (node.nodeType === Node.TEXT_NODE && !insideSomethingToSkip) {
-    replaceWordsInTextNode(node, words);
+    replaceWordsInTextNode(node, words, count);
   } else {
-    const isSomethingToSkip = node.nodeName.toLowerCase() === 'a' || node.nodeName.toLowerCase() === 'input';
+    const tagsToSkip = ['a', 'input', 'script', 'style', 'textarea', 'pre', 'code'];
+    let isSomethingToSkip = tagsToSkip.includes(node.nodeName.toLowerCase());
+    if (node.classList && node.classList.contains('translated-word')) {
+      isSomethingToSkip = true;
+    }
     for (let i = 0; i < node.childNodes.length; i++) {
-      traverseDOM(node.childNodes[i], words, insideSomethingToSkip || isSomethingToSkip);
+      traverseDOM(node.childNodes[i], words, insideSomethingToSkip || isSomethingToSkip, count);
     }
   }
 }
@@ -64,13 +82,19 @@ chrome.storage.local.get(['words'], ({ words }) => {
     });
 
     observer.observe(document.body, { childList: true, subtree: true });
-
-    setTimeout(traverseDOM(document.body, words),1000);
+    setTimeout(function(){traverseDOM(document.body, words)},1000);
     document.body.addEventListener('click', toggleTranslation);
   } else {
     fetchAndUpdateWords();
   }
 });
+function do_traversal() {
+  chrome.storage.local.get(['words'], ({ words }) => {
+    if (words) {
+      traverseDOM(document.body, words)
+    }
+  });
+}
 
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -79,13 +103,34 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-// content.js
+/////////////////////////////////////////////////////////
+// Now listen for changes to the language chosen.
 document.addEventListener('DOMContentLoaded', () => {
-  const updateWordsButton = document.querySelector('#update-words-button');
-
-  if (updateWordsButton) {
-    updateWordsButton.addEventListener('click', () => {
-      fetchAndUpdateWords();
-    });
-  }
+  attachUpdateWordsButtonEventListener();
 });
+function handleClick() {
+  fetchAndUpdateWords();
+}
+function attachUpdateWordsButtonEventListener() {
+  const updateWordsButton = document.querySelector('#update-words-button');
+  if (updateWordsButton) {
+    console.log("Adding Listener");
+    updateWordsButton.removeEventListener('click', handleClick);
+    updateWordsButton.addEventListener('click', handleClick);
+  }
+}
+function observeMutations() {
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      if (mutation.type === 'childList') {
+        attachUpdateWordsButtonEventListener();
+      }
+    }
+  });
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+}
+
+observeMutations();
