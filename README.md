@@ -46,7 +46,7 @@ If you'd like to contribute to Word Sponge, please fork the repository and submi
 ## Forking Your Own
 
 If you'd like to fork your own, you can do so easily by forking this repository. You could, for example, add word lists directly into the extension.
-My version of the extension checks for updates to the word list every 24 hours from [thewordsponge.com](thewordsponge.com), but you could host your
+My version of the extension checks for updates to the word list every 24 hours from [thewordsponge.com](https://thewordsponge.com), but you could host your
 own site or use a different method to update the word list.
 
 ## How to Change Language
