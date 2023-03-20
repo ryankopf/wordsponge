@@ -1,13 +1,23 @@
-async function fetchAndUpdateWords() {
-  const response = await fetch('https://thewordsponge.com/sponge/words', { credentials: 'include' });
-  const data = await response.json();
-  chrome.storage.local.set({ words: data }, () => {
-    if (chrome.runtime.lastError) {
-      console.error(chrome.runtime.lastError);
+function fetchAndUpdateWords() {
+  const url = new URL(window.location.href);
+  chrome.storage.local.get([url.hostname], (result) => {
+    if (!result[url.hostname]) {
+      fetch('https://thewordsponge.com/sponge/words', { credentials: 'include' })
+          .then(response => response.json())
+          .then(data => {
+            chrome.storage.local.set({ words: data }, () => {
+              if (chrome.runtime.lastError) {
+                console.error(chrome.runtime.lastError);
+              }
+            });
+            setTimeout(function() { undo_translation(); do_traversal(); }, 1000);
+          });
+    } else {
+      undo_translation();
     }
   });
-  setTimeout(function(){undo_translation();do_traversal();},1000);
 }
+
 function undo_translation() {
   const translatedWords = document.querySelectorAll('.translated-word');
   translatedWords.forEach(word => {
@@ -50,8 +60,14 @@ function traverseDOM(node, words, insideSomethingToSkip = false, count = 1) {
   } else {
     const tagsToSkip = ['a', 'input', 'script', 'style', 'textarea', 'pre', 'code'];
     let isSomethingToSkip = tagsToSkip.includes(node.nodeName.toLowerCase());
-    if (node.classList && node.classList.contains('translated-word')) {
-      isSomethingToSkip = true;
+    const classesToSkip = ['ace_editor','notranslate','translated-word'];
+    if (node.classList) {
+      for (const className of classesToSkip) {
+        if (node.classList.contains(className)) {
+          isSomethingToSkip = true;
+          break;
+        }
+      }
     }
     for (let i = 0; i < node.childNodes.length; i++) {
       traverseDOM(node.childNodes[i], words, insideSomethingToSkip || isSomethingToSkip, count);
