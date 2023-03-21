@@ -5,7 +5,6 @@
   "description": "Word Sponge helps you learn a new language by integrating that language into your daily life.",
   "permissions": [
     "storage",
-    "scripting",
     "alarms",
     "activeTab"
   ],
