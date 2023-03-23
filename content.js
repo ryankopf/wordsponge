@@ -109,7 +109,6 @@ function startTranslations() {
 function maybeStart() {
   const url = new URL(window.location.href);
   chrome.storage.sync.get([url.hostname], (result) => {
-    console.log(result)
     if (!result[url.hostname]) {
       startTranslations();
     }
