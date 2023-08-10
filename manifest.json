@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Word Sponge",
-  "version": "1.0",
+  "version": "1.1",
   "description": "Word Sponge helps you learn a new language by integrating that language into your daily life.",
   "permissions": [
     "storage",
