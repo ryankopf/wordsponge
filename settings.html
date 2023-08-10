@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Sponge - Add Your Words</title>
+  <!--<link rel="stylesheet" href="styles.css"> <-- Link to your CSS file -->
+  <style>
+    .p-4 { padding: 40px 0; }
+  </style>
+</head>
+<body>
+<h1>Add Your Own Words</h1>
+<form id="wordListForm">
+  <label for="wordList">Word List</label>
+  <div>
+    <textarea id="wordList" name="wordList" rows="10" cols="50" required></textarea>
+  </div>
+  <button type="button" id="saveButton">Save</button>
+</form>
+<div class="results"></div>
+<div class="p-4">
+  <button id="updateWordsButton">Update Words</button>
+</div>
+<!-- Add any additional elements as needed -->
+<script src="settings.js"></script> <!-- Link to your JS file -->
+</body>
+</html>
