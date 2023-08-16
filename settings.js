@@ -28,13 +28,37 @@ document.getElementById('saveButton').addEventListener('click', () => {
 });
 
 document.getElementById('updateWordsButton').addEventListener('click', () => {
-    fetch('https://thewordsponge.com/sponge/words', { credentials: 'include' })
-        .then(response => response.json())
-        .then(data => {
-          chrome.storage.local.set({ words: data }, () => {
-            if (chrome.runtime.lastError) {
-              console.error(chrome.runtime.lastError);
-            }
-          });
+  var selectedLanguage = document.getElementById('languageSelect').value;
+  var url = 'https://thewordsponge.com/sponge/words/' + selectedLanguage;
+  fetch(url, { credentials: 'include' })
+      .then(response => {
+        console.log(response.body);
+        return response.json();
+      })
+      .then(data => {
+        chrome.storage.local.set({ words: data }, () => {
+          if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError);
+          }
         });
+      });
 });
+
+document.getElementById('languageSelect').addEventListener('change', function() {
+  var selectedLanguage = this.value;
+  chrome.storage.local.set({ 'language': selectedLanguage }, function() {
+    if (chrome.runtime.lastError) {
+      console.error(chrome.runtime.lastError);
+    }
+  });
+});
+
+function loadLanguageSetting() {
+  chrome.storage.local.get('language', function(data) {
+    if (data.language) {
+      document.getElementById('languageSelect').value = data.language;
+      console.log('Language setting loaded:', data.language);
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded', loadLanguageSetting);

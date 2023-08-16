@@ -7,6 +7,7 @@
   <!--<link rel="stylesheet" href="styles.css"> <-- Link to your CSS file -->
   <style>
     .p-4 { padding: 40px 0; }
+    .p-2 { padding: 20px 0; }
   </style>
 </head>
 <body>
@@ -20,7 +21,20 @@
 </form>
 <div class="results"></div>
 <div class="p-4">
-  <button id="updateWordsButton">Update Words</button>
+  <div class="p-2">
+    <select id="languageSelect" name="languageSelect">
+      <option value="ES">ES</option>
+      <option value="DE">DE</option>
+      <option value="FR">FR</option>
+      <option value="IN">IN</option>
+      <option value="JP">JP</option>
+      <option value="GB">GB</option>
+      <option value="AU">AU</option>
+    </select>
+  </div>
+  <div class="p-2">
+    <button id="updateWordsButton">Update Words</button>
+  </div>
 </div>
 <!-- Add any additional elements as needed -->
 <script src="settings.js"></script> <!-- Link to your JS file -->
