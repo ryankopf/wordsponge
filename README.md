@@ -24,9 +24,9 @@ Word Sponge is a Chrome extension that helps you learn a new language by replaci
 6. Navigate to the folder where you extracted the zip file, and select it.
 7. Click on the "Select Folder" button to load the extension.
 
-## Installation After Approval
+## Installation
 
-1. (AWAITING APPROVAL) Go to the [Chrome Web Store](https://chrome.google.com/webstore/detail/word-sponge/pfaejhaajopkodciobmlpehkclkegbkl) page for Word Sponge.
+1. Go to the [Chrome Web Store](https://chromewebstore.google.com/detail/word-sponge/kiphhbngjiidccgcebflhlmmabighbem) page for Word Sponge.
 2. Click on the "Add to Chrome" button to add the extension to your browser.
 3. Once installed, click on the Word Sponge icon in the top-right corner of your browser to open the options page.
 4. Choose the language you want to learn from the dropdown menu, and click on "Save" to update your preferences.
